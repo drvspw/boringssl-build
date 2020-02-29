@@ -8,11 +8,20 @@ if [ -f "$DEPS_LOCATION/$DESTINATION/lib/libssl.a" ]; then
     exit 0
 fi
 
+DEBIAN_VERSION=$(cat /etc/debian_version)
+if [[ $DEBIAN_VERSION =~ 9\.* ]]; then
+    OS=stretch
+elif [[ $DEBIAN_VERSION =~ 8\.* ]]; then
+    OS=jessie
+else
+    OS=linux
+fi
+
 REPO=https://boringssl.googlesource.com/boringssl
 BRANCH=master
 REV=441efad4d7e97f313c7bbfc66252da6fea5c3c7a
 HASH=$(echo "${REV}" | cut -c1-7)
-PKG=${DESTINATION}-${HASH}.tar
+PKG=${DESTINATION}-${HASH}-${OS}.tar
 
 function fail_check
 {
